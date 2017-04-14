@@ -1,3 +1,9 @@
+from bs4 import BeautifulSoup
+import requests
+import re
+from google import google
+import os, sys
+sys.path.append(os.path.dirname(__file__))
 from lxml import html  
 import requests
 from exceptions import ValueError
@@ -8,12 +14,19 @@ from collections import OrderedDict
 from time import sleep
 from google import google
 num_page = 1
-def parse(name):
-	search_results = google.search(name + " ticker name", num_page)
-	ticker = search_results[0].name.split(' ')[0]
+def scrape(symbol) :
+	url = 'http://finance.yahoo.com/q?s={}'.format(symbol)
+	r = requests.get(url)
+	soup = BeautifulSoup(r.text, "html.parser")
+
+	data1 = soup.find_all('span', class_ = "Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(ib)")
+	soup = BeautifulSoup(''.join(str(data1)))
+	data2 = soup.text
+	return data2        
+ 
+def parse(ticker):
 	url = "http://finance.yahoo.com/quote/%s?p=%s"%(ticker,ticker)
 	response = requests.get(url)
-	#print "Parsing %s"%(url)
 	sleep(4)
 	parser = html.fromstring(response.text)
 	summary_table = parser.xpath('//div[contains(@data-test,"summary-table")]//tr')
@@ -44,5 +57,7 @@ if __name__=="__main__":
 	name = args.name
 	print "Fetching data for %s"%(name)
 	scraped_data = parse(name)
-	rp = json.dumps(dict(scraped_data))
+	dictionary = dict(scraped_data)
+	dictionary['Stock_Value'] = scrape(name)
+	rp = json.dumps(dictionary)
 	print rp
