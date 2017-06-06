@@ -1,0 +1,30 @@
+extends ../layout
+block links
+  link(rel='stylesheet', href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css")
+
+block content
+  h1 Manage Portfolio
+  p.lead You are : #{user.username}
+  p.lead Stock considered : #{company}
+  form.form-horizontal(method='POST' , action="/add-to-portfolio")
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group
+      label.col-sm-3.control-label(for='quantity') Quantity  :
+      .col-sm-7
+        input.form-control(type='text', name='quantity', id='quantity', placeholder='Qty', autofocus, required)
+    .form-group
+      label.col-sm-3.control-label(for='date') Date  :
+      .col-sm-7
+        input.form-control(type='text', name='date', id='date', placeholder=date , autofocus, required)
+    .form-group
+      .col-sm-offset-5.col-sm-7
+        button.col-sm-3.btn.btn-primary(type='submit')
+          i.fa.fa-user
+          | Go
+block scripts
+  script(src='js/lib/jquery-1.12.4.js')
+  script(src='js/lib/jquery-date.js')
+  script.
+    $( function() {
+      $( "#date" ).datepicker({dateFormat : 'yy-mm-dd'});
+    } );

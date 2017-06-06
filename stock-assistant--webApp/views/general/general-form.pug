@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  h2 Enter Data :
+  form.form-horizontal(method='POST' , action="/rest-handler")
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group
+      label.col-sm-3.control-label(for='name') Name  :
+      .col-sm-7
+        input.form-control(type='text', name='name', id='name', placeholder='Stock-Name' , autofocus, required)
+    .form-group
+      label.col-sm-3.control-label(for='sd') Start-Date :
+      .col-sm-7
+        input.form-control(type='text', name='sd', id='sd', placeholder='Start-Date', autofocus, required)
+    .form-group
+      label.col-sm-3.control-label(for='ed') End-Date :
+      .col-sm-7
+        input.form-control(type='text', name='ed', id='ed', placeholder='End-Date', autofocus, required)
+    .form-group
+      label.col-sm-3.control-label(for='psd') Predict-Start-Date  :
+      .col-sm-7
+        input.form-control(type='text', name='psd', id='psd', placeholder="Predict-Start-Date" , autofocus, required)
+    .form-group
+      label.col-sm-3.control-label(for='ped') Predict-End-Date  :
+      .col-sm-7
+        input.form-control(type='text', name='ped', id='ped', placeholder="Predict-End-Date" , autofocus, required)
+    .form-group
+      .col-sm-offset-5.col-sm-7
+        button.col-sm-3.btn.btn-primary(type='submit')
+          i.fa.fa-user
+          | Go

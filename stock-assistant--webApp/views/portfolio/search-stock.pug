@@ -1,0 +1,57 @@
+extends ../layout
+block links
+  link(rel='stylesheet', href='/css/chart/bootstrap.css')
+  style.
+    canvas{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    }
+
+block content
+  form.form-horizontal(method='POST' , action="/search-stock")
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group
+      label.col-sm-3.control-label(for='stock') Stock  :
+      .col-sm-7
+        input.form-control(type='text', name='stock', id='stock', placeholder='Stock', autofocus, required)
+    .form-group
+      .col-sm-offset-5.col-sm-7
+        button.col-sm-3.btn.btn-primary(type='submit')
+          i.fa.fa-user
+          | Search
+  if news
+    h2 TOP NEWS :
+    for article in news
+      p !{article}
+
+  div
+    canvas#canvas
+  .col-sm-offset-5
+    if quote_data
+      h3 QUOTE DATA :
+      for data in quote_data
+        p !{data}
+        br
+
+      form.form-horizontal(method='POST' action='/port-home')
+        .form-group
+          .col-sm-7
+            button.col-sm-5.btn.btn-primary(type='submit')
+              i.fa.fa-user
+              | Add to Portfolio
+
+block scripts
+    script(src='/js/chart/Chart.bundle.js')
+    script(src='/js/chart/utils.js')
+    script(src='/js/chart/config-chart.js')
+    script(src='/js/chart/Chart.js')
+    if raw_data
+      script.
+        var xlabels = processHistoricalRawData('x' , 'Close' , !{raw_data});
+        var yvalues = processHistoricalRawData('y' , 'Close' , !{raw_data});
+        var config = setConfig(xlabels,yvalues,stepsize=4);
+        window.onload = function() {
+          var ctx = document.getElementById("canvas").getContext("2d");
+          window.myLine = new Chart(ctx, config);
+        };
